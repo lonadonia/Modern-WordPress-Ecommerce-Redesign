@@ -1,6 +1,6 @@
 {
   "baseURL": "http://127.0.0.1:4173",
-  "generatedAt": "2026-07-16T01:15:36.858Z",
+  "generatedAt": "2026-07-16T03:09:04.367Z",
   "checks": [
     {
       "label": "home-desktop",
@@ -69,25 +69,32 @@
       "unnamedButtons": 0
     },
     {
-      "label": "hero-motion",
-      "width": 1280,
-      "height": 720,
-      "duration": 8.76,
-      "paused": false,
-      "source": "http://127.0.0.1:4173/assets/modern-kitchen-cabinets.mp4",
-      "toggleLabel": "Pause background video"
+      "label": "hero-backdrop",
+      "sources": 4,
+      "activeSource": "/assets/hero-scene-ai-01.jpg",
+      "current": "02",
+      "activeDots": 1,
+      "transitionMs": "1600",
+      "canvasWidth": 1440,
+      "canvasHeight": 745
     },
     {
-      "label": "hero-gallery",
+      "label": "hero-backdrop-control",
+      "controlLabel": "Resume kitchen slideshow",
+      "paused": true
+    },
+    {
+      "label": "hero-products",
       "sources": 4,
-      "activeSource": "/assets/hero-kitchen-ai-01.jpg",
-      "current": "02",
-      "currentDots": 1,
-      "transition": "1.05s, 6s"
+      "activeSource": "/assets/drawer-door-base.webp",
+      "activeImages": 1,
+      "productName": "Drawer and door base",
+      "heroStage": "rgb(238, 234, 227)",
+      "catalogStage": "rgb(235, 231, 224)"
     },
     {
       "label": "section-reveal",
-      "revealOpacity": 0.940787
+      "revealOpacity": 0.921141
     },
     {
       "label": "desktop-filter",

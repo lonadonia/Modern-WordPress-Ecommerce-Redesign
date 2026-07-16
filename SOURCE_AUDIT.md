@@ -47,17 +47,20 @@
 
 | Prototype asset | Source | Creator | License / use note |
 |---|---|---|---|
-| `modern-kitchen-cabinets.mp4` | [Modern Kitchen Interior, Pexels video 10216191](https://www.pexels.com/video/modern-kitchen-interior-10216191/) | Ammad Rasool | 1280×720 background video downloaded from Pexels and verified in-browser. The [Pexels license](https://www.pexels.com/license/) permits free website and e-commerce use, modification, and use without required attribution. The prototype uses it as an integrated hero background and does not redistribute or sell the unaltered clip. |
+| `modern-kitchen-cabinets.mp4` | [Modern Kitchen Interior, Pexels video 10216191](https://www.pexels.com/video/modern-kitchen-interior-10216191/) | Ammad Rasool | 1280×720 video downloaded for an earlier hero treatment. The [Pexels license](https://www.pexels.com/license/) permits free website and e-commerce use, modification, and use without required attribution. The file remains in the prototype asset library but is not rendered by the current image-slideshow hero. |
 
-## Generated hero gallery assets
+## Generated hero assets
 
 | Prototype asset | Generation method | Visual role |
 |---|---|---|
 | `hero-kitchen-ai-01.jpg` | OpenAI built-in image generation, original photorealistic scene | Bright White Shaker kitchen with warm-oak island and black hardware |
 | `hero-kitchen-ai-02.jpg` | OpenAI built-in image generation, original photorealistic scene | White Shaker kitchen with navy island, quartz and restrained brass accents |
 | `hero-kitchen-ai-03.jpg` | OpenAI built-in image generation, original photorealistic scene | Compact galley kitchen emphasizing pantry storage and open shelving |
+| `hero-scene-ai-01.jpg` | OpenAI built-in image generation, original 16:9 photorealistic scene; web-optimized JPEG | Warm morning White Shaker kitchen with coordinated pantry, wall and base cabinetry |
+| `hero-scene-ai-02.jpg` | OpenAI built-in image generation, original 16:9 photorealistic scene; web-optimized JPEG | White Shaker kitchen with a restrained navy island and warm architectural light |
+| `hero-scene-ai-03.jpg` | OpenAI built-in image generation, original 16:9 photorealistic scene; web-optimized JPEG | Long White Shaker galley and pantry composition with a calm shadowed copy area |
 
-The generated scenes use no supplied customer identity, logos, visible text, or third-party stock image input. They are presentation imagery, not verified Temima installations or exact product/specification evidence, and must not be captioned as completed customer work.
+The generated scenes use no supplied customer identity, logos, visible text, or third-party stock image input. They are presentation imagery, not verified Temima installations or exact product/specification evidence, and must not be captioned as completed customer work. The three portrait `hero-kitchen-ai-*` studies are retained as earlier design assets but are not used in the current hero; the landscape `hero-scene-ai-*` set is active behind the hero copy.
 
 The product WebP files declare 1080×1080 dimensions but are extremely small, low-detail pale renders. They are usable on a warm neutral stage, not as zoom-level technical evidence. No dimension diagram, interior photography, spec sheet, or alternate-angle set was supplied. The prototype creates a clearly labeled illustrative dimension diagram in HTML/SVG rather than pretending a manufacturer sheet exists.
 
@@ -132,4 +135,4 @@ The prototype uses the brief’s clearer `/shop/white-shaker-cabinets` route. Pr
 
 ## Asset recommendation
 
-The Pexels hero video is licensed for the current website treatment under the terms linked above. The supplied still hero kitchen and three process images should still receive client rights confirmation. The generated gallery images are inspiration-only and should eventually be complemented or replaced by approved Temima installations. Product renders need a consistent higher-quality export for production, especially for zoom and comparison. The client should supply at least 8–12 approved completed kitchens plus dimension diagrams and interiors for primary product families.
+The retained Pexels video is licensed under the terms linked above but is not active in the current hero treatment. The supplied still hero kitchen and three process images should still receive client rights confirmation. The generated background images are inspiration-only and should eventually be complemented or replaced by approved Temima installations. Product renders need a consistent higher-quality export for production, especially for zoom and comparison. The client should supply at least 8–12 approved completed kitchens plus dimension diagrams and interiors for primary product families.

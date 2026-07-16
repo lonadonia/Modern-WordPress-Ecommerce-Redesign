@@ -86,33 +86,47 @@ const motionPage = await motionContext.newPage();
 attachDiagnostics(motionPage, 1440);
 await goto(motionPage, '/');
 await motionPage.waitForFunction(() => {
-  const video = document.querySelector('.home-hero__video');
-  return video && video.readyState >= 2 && video.videoWidth > 0;
+  const scenes = [...document.querySelectorAll('[data-backdrop-slide]')];
+  return scenes.length === 4 && scenes.every((scene) => scene.complete && scene.naturalWidth > 0);
 }, null, { timeout: 15000 });
-const heroMotion = await motionPage.evaluate(() => {
-  const video = document.querySelector('.home-hero__video');
-  const toggle = document.querySelector('[data-video-toggle]');
-  return { width: video.videoWidth, height: video.videoHeight, duration: video.duration, paused: video.paused, source: video.currentSrc, toggleLabel: toggle?.getAttribute('aria-label') };
-});
-checks.push({ label: 'hero-motion', ...heroMotion });
-if (heroMotion.width < 1280 || heroMotion.height < 720 || !heroMotion.duration || heroMotion.paused || !heroMotion.source.endsWith('.mp4')) issues.push({ type: 'hero-video', viewport: 1440, url: motionPage.url(), message: JSON.stringify(heroMotion) });
-await motionPage.locator('[data-video-toggle]').click();
-if (!(await motionPage.locator('.home-hero__video').evaluate((video) => video.paused))) issues.push({ type: 'hero-video-control', viewport: 1440, url: motionPage.url(), message: 'The background video did not pause.' });
-await motionPage.locator('[data-video-toggle]').click();
-const gallerySources = await motionPage.locator('[data-gallery-slide]').evaluateAll((slides) => slides.map((slide) => slide.getAttribute('src')));
-await motionPage.locator('[data-gallery-next]').click();
+const backdropSources = await motionPage.locator('[data-backdrop-slide]').evaluateAll((slides) => slides.map((slide) => slide.getAttribute('src')));
+await motionPage.locator('[data-backdrop-next]').click();
 await motionPage.waitForFunction(() => {
-  const active = document.querySelector('[data-gallery-slide].is-active');
-  return active?.getAttribute('src')?.includes('hero-kitchen-ai-01') && active.complete && active.naturalWidth > 0;
+  const backdrop = document.querySelector('[data-hero-backdrop]');
+  const canvas = document.querySelector('[data-backdrop-canvas]');
+  return document.querySelector('[data-backdrop-current]')?.textContent === '02' && backdrop?.classList.contains('is-canvas-ready') && canvas?.width > 0;
 });
-const galleryState = await motionPage.evaluate(() => ({
-  activeSource: document.querySelector('[data-gallery-slide].is-active')?.getAttribute('src'),
-  current: document.querySelector('[data-gallery-current]')?.textContent,
-  currentDots: document.querySelectorAll('[data-gallery-go][aria-current="true"]').length,
-  transition: getComputedStyle(document.querySelector('[data-gallery-slide].is-active')).transitionDuration
+const backdropState = await motionPage.evaluate(() => ({
+  activeSource: [...document.querySelectorAll('[data-backdrop-slide]')][Number(document.querySelector('[data-backdrop-current]')?.textContent || 1) - 1]?.getAttribute('src'),
+  current: document.querySelector('[data-backdrop-current]')?.textContent,
+  activeDots: document.querySelectorAll('[data-backdrop-dot].is-active').length,
+  transitionMs: document.querySelector('[data-hero-backdrop]')?.dataset.transitionMs,
+  canvasWidth: document.querySelector('[data-backdrop-canvas]')?.width,
+  canvasHeight: document.querySelector('[data-backdrop-canvas]')?.height
 }));
-checks.push({ label: 'hero-gallery', sources: gallerySources.length, ...galleryState });
-if (gallerySources.length !== 4 || !gallerySources.slice(1).every((source) => source.includes('hero-kitchen-ai-')) || galleryState.current !== '02' || galleryState.currentDots !== 1 || !galleryState.transition.includes('1.05s')) issues.push({ type: 'hero-gallery', viewport: 1440, url: motionPage.url(), message: JSON.stringify({ gallerySources, galleryState }) });
+checks.push({ label: 'hero-backdrop', sources: backdropSources.length, ...backdropState });
+if (backdropSources.length !== 4 || !backdropSources.slice(1).every((source) => source.includes('hero-scene-ai-')) || !backdropState.activeSource.includes('hero-scene-ai-01') || backdropState.current !== '02' || backdropState.activeDots !== 1 || backdropState.transitionMs !== '1600' || backdropState.canvasWidth < 1440 || backdropState.canvasHeight < 720) issues.push({ type: 'hero-backdrop', viewport: 1440, url: motionPage.url(), message: JSON.stringify({ backdropSources, backdropState }) });
+await motionPage.locator('[data-backdrop-toggle]').click();
+const backdropControl = await motionPage.evaluate(() => ({
+  controlLabel: document.querySelector('[data-backdrop-toggle]')?.getAttribute('aria-label'),
+  paused: document.querySelector('[data-hero-backdrop-controls]')?.classList.contains('is-paused')
+}));
+checks.push({ label: 'hero-backdrop-control', ...backdropControl });
+if (backdropControl.controlLabel !== 'Resume kitchen slideshow' || !backdropControl.paused) issues.push({ type: 'hero-backdrop-control', viewport: 1440, url: motionPage.url(), message: 'The background slideshow did not pause.' });
+await motionPage.locator('[data-backdrop-toggle]').click();
+
+const productSources = await motionPage.locator('[data-hero-product-slide]').evaluateAll((slides) => slides.map((slide) => slide.getAttribute('src')));
+await motionPage.locator('[data-product-next]').click();
+await motionPage.waitForFunction(() => document.querySelector('[data-hero-product-slide].is-active')?.getAttribute('src')?.includes('drawer-door-base'));
+const productFeatureState = await motionPage.evaluate(() => ({
+  activeSource: document.querySelector('[data-hero-product-slide].is-active')?.getAttribute('src'),
+  activeImages: document.querySelectorAll('[data-hero-product-slide].is-active').length,
+  productName: document.querySelector('[data-hero-product-name]')?.textContent,
+  heroStage: getComputedStyle(document.querySelector('.hero-product__media')).backgroundColor,
+  catalogStage: getComputedStyle(document.querySelector('.product-card__media')).backgroundColor
+}));
+checks.push({ label: 'hero-products', sources: productSources.length, ...productFeatureState });
+if (productSources.length !== 4 || !productSources.every((source) => /white-shaker-door|drawer-door-base|wall-cabinet|tall-pantry/.test(source)) || productFeatureState.activeImages !== 1 || productFeatureState.productName !== 'Drawer and door base' || productFeatureState.heroStage !== 'rgb(238, 234, 227)' || productFeatureState.catalogStage !== 'rgb(235, 231, 224)') issues.push({ type: 'hero-products', viewport: 1440, url: motionPage.url(), message: JSON.stringify({ productSources, productFeatureState }) });
 await motionPage.locator('.category-card').first().scrollIntoViewIfNeeded();
 await motionPage.waitForFunction(() => Number.parseFloat(getComputedStyle(document.querySelector('.category-card')).opacity) >= .9);
 const revealOpacity = await motionPage.locator('.category-card').first().evaluate((card) => Number.parseFloat(getComputedStyle(card).opacity));

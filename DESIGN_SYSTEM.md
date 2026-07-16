@@ -105,10 +105,10 @@ Icons use the inline SVG helper in `src/icons.js`:
 
 - Typical interface duration: 180–250ms; editorial reveal duration: 660ms
 - Motion explains drawers, dialogs, filter refresh, hover, progress, toasts, and content hierarchy as sections enter the viewport
-- The hero uses a locally hosted, muted kitchen video with a visible pause/play control and a still-image fallback
-- A four-image kitchen gallery uses a 1050ms cross-fade, subtle image drift, manual previous/next controls, swipe navigation, and timed progress indicators; autoplay pauses on hover, focus, reduced motion, and hidden tabs
+- The hero background cycles through four wide kitchen scenes with a 1600ms canvas-rendered cross-dissolve, subtle settle motion, manual previous/next/pause controls, a visible counter, and timed progress indicators
+- The foreground Featured Collection card is visually independent from the background and uses manual product-image navigation for White Shaker door, base, wall, and pantry renders
 - Lightweight native `IntersectionObserver` reveals replace a third-party animation package; there is no parallax or scroll hijacking
-- `prefers-reduced-motion: reduce` removes reveals, pauses/hides the background video, uses its poster image, and restores instant scrolling
+- `prefers-reduced-motion: reduce` removes reveals, disables background autoplay and cross-fade motion, keeps manual scene navigation instant, and restores instant scrolling
 
 ## Accessibility rules
 

@@ -125,13 +125,13 @@ Automated route checks verify:
 
 Motion-specific browser checks also verify:
 
-- The locally hosted hero MP4 loads as 1280×720 media with a valid duration
-- Muted autoplay starts in a no-preference motion context
-- The visible hero control pauses and resumes playback
-- The four-image hero gallery loads all three generated assets, advances to exactly one active slide, and updates its counter and current indicator
-- Previous/next controls retain accessible names while the 1050ms cross-fade remains present in the computed browser styles
+- The hero background loads the supplied still plus all three generated 16:9 scenes and renders them to a correctly sized canvas
+- The 1600ms cinematic cross-dissolve advances the active source, counter and single current indicator in a no-preference motion context
+- Previous, next and pause/resume controls retain accessible names and expose their current state through the control label
+- The independent Featured Collection card loads four product-render sources, advances to one active product and announces its updated product name
+- The hero product stage and catalog product cards retain their original warm-neutral surfaces
 - Scroll-triggered section reveals reach their final visible state
-- Reduced-motion mode replaces the moving background with the static poster and removes reveal motion
+- Reduced-motion mode disables background autoplay and transition animation while preserving instant manual navigation and removing reveal motion
 
 Manual/code review confirms:
 
@@ -172,7 +172,8 @@ The single supplied finished-kitchen image is intentionally reused as disclosed 
 
 Screenshots were inspected for all six desktop/mobile templates. Refinements made after inspection include:
 
-- Warm neutral product stages to prevent white-on-white product loss
+- Original warm-neutral product stages retained across the catalog, cart, checkout and confirmations
+- Canvas-rendered hero background cross-dissolves plus an independent product-focused Featured Collection card
 - Mobile single-column product cards for legibility
 - Mobile category scroller containment
 - Cart/quote pre-footer spacing reduction

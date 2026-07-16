@@ -114,95 +114,196 @@ const initPageMotion = (signal) => {
   signal.addEventListener('abort', () => observer.disconnect(), { once: true });
 };
 
-const initHeroVideo = (signal) => {
-  const video = document.querySelector('.home-hero__video');
-  const backdrop = document.querySelector('.home-hero__backdrop');
-  const toggle = document.querySelector('[data-video-toggle]');
-  if (!video || !backdrop || !toggle) return;
-
+const initHeroBackdrop = (signal) => {
+  const backdrop = document.querySelector('[data-hero-backdrop]');
+  const controls = document.querySelector('[data-hero-backdrop-controls]');
+  const canvas = backdrop?.querySelector('[data-backdrop-canvas]');
+  const context = canvas?.getContext('2d', { alpha: false });
+  if (!backdrop || !controls || !canvas || !context) return;
+  const slides = [...backdrop.querySelectorAll('[data-backdrop-slide]')];
+  const dots = [...controls.querySelectorAll('[data-backdrop-dot]')];
+  const current = controls.querySelector('[data-backdrop-current]');
+  const toggle = controls.querySelector('[data-backdrop-toggle]');
+  const status = document.querySelector('[data-backdrop-status]');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const mobile = window.matchMedia('(max-width: 640px)');
+  const transitionDuration = 1600;
+  const focalPoints = [[.5, .5], [.51, .5], [.49, .49], [.51, .5]];
+  let index = 0;
+  let timer = null;
+  let animationFrame = null;
+  let imagesReady = false;
   let intentionallyPaused = false;
 
+  const sceneFocalPoint = (sceneIndex) => mobile.matches ? [.62, .5] : focalPoints[sceneIndex] || [.5, .5];
+
+  const drawCover = (image, sceneIndex, alpha = 1, zoom = 1.01) => {
+    if (!image?.naturalWidth || !image?.naturalHeight) return;
+    const width = canvas.width;
+    const height = canvas.height;
+    const [focusX, focusY] = sceneFocalPoint(sceneIndex);
+    const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight) * zoom;
+    const drawWidth = image.naturalWidth * scale;
+    const drawHeight = image.naturalHeight * scale;
+    context.save();
+    context.globalAlpha = alpha;
+    context.drawImage(image, (width - drawWidth) * focusX, (height - drawHeight) * focusY, drawWidth, drawHeight);
+    context.restore();
+  };
+
+  const clearCanvas = () => {
+    context.globalAlpha = 1;
+    context.fillStyle = '#091321';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  };
+
+  const drawScene = (sceneIndex) => {
+    clearCanvas();
+    drawCover(slides[sceneIndex], sceneIndex);
+  };
+
+  const resizeCanvas = () => {
+    const bounds = backdrop.getBoundingClientRect();
+    const density = Math.min(window.devicePixelRatio || 1, 1.5);
+    const width = Math.max(1, Math.round(bounds.width * density));
+    const height = Math.max(1, Math.round(bounds.height * density));
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+    if (imagesReady) drawScene(index);
+  };
+
+  const animateScene = (previousIndex, nextIndex) => {
+    if (animationFrame) window.cancelAnimationFrame(animationFrame);
+    if (!imagesReady || reducedMotion.matches) {
+      drawScene(nextIndex);
+      return;
+    }
+    const startedAt = performance.now();
+    const paint = (now) => {
+      const progress = Math.min(1, (now - startedAt) / transitionDuration);
+      const eased = progress * progress * (3 - (2 * progress));
+      clearCanvas();
+      drawCover(slides[previousIndex], previousIndex, 1, 1.01 + (.012 * eased));
+      drawCover(slides[nextIndex], nextIndex, eased, 1.025 - (.015 * eased));
+      if (progress < 1) animationFrame = window.requestAnimationFrame(paint);
+      else {
+        animationFrame = null;
+        drawScene(nextIndex);
+      }
+    };
+    animationFrame = window.requestAnimationFrame(paint);
+  };
+
+  const showScene = (nextIndex, announce = false) => {
+    const normalized = (nextIndex + slides.length) % slides.length;
+    if (normalized === index) return;
+    const previousIndex = index;
+    dots[index]?.classList.remove('is-active');
+    index = normalized;
+    dots[index]?.classList.add('is-active');
+    if (current) current.textContent = String(index + 1).padStart(2, '0');
+    if (announce && status) status.textContent = `Kitchen scene ${index + 1} of ${slides.length}`;
+    animateScene(previousIndex, index);
+  };
+
+  const stop = () => {
+    if (timer) window.clearTimeout(timer);
+    timer = null;
+  };
+
   const updateControl = () => {
-    const paused = intentionallyPaused || reducedMotion.matches;
+    if (!toggle) return;
     toggle.hidden = reducedMotion.matches;
-    toggle.setAttribute('aria-label', paused ? 'Play background video' : 'Pause background video');
-    toggle.innerHTML = `${icon(paused ? 'play' : 'pause')}<span>${paused ? 'Play film' : 'Pause film'}</span>`;
+    toggle.setAttribute('aria-label', intentionallyPaused ? 'Resume kitchen slideshow' : 'Pause kitchen slideshow');
+    toggle.innerHTML = icon(intentionallyPaused ? 'play' : 'pause');
   };
 
-  const syncPlayback = () => {
-    if (reducedMotion.matches || intentionallyPaused || document.hidden) video.pause();
-    else video.play().catch(() => { intentionallyPaused = true; updateControl(); });
+  const schedule = () => {
+    stop();
+    const paused = !imagesReady || reducedMotion.matches || document.hidden || intentionallyPaused || slides.length < 2;
+    controls.classList.toggle('is-paused', paused);
     updateControl();
+    if (paused) {
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+        animationFrame = null;
+        if (imagesReady) drawScene(index);
+      }
+      return;
+    }
+    const activeDot = dots[index];
+    activeDot?.classList.remove('is-active');
+    if (activeDot) {
+      void activeDot.offsetWidth;
+      activeDot.classList.add('is-active');
+    }
+    timer = window.setTimeout(() => {
+      showScene(index + 1);
+      schedule();
+    }, 6800);
   };
 
-  const markReady = () => backdrop.classList.add('is-video-ready');
-  if (video.readyState >= 2) markReady(); else video.addEventListener('canplay', markReady, { once: true, signal });
-  video.addEventListener('error', () => { backdrop.classList.add('is-video-unavailable'); toggle.hidden = true; }, { once: true, signal });
-  toggle.addEventListener('click', () => { intentionallyPaused = !intentionallyPaused; syncPlayback(); }, { signal });
-  reducedMotion.addEventListener('change', syncPlayback, { signal });
-  document.addEventListener('visibilitychange', syncPlayback, { signal });
-  syncPlayback();
+  const select = (nextIndex) => { showScene(nextIndex, true); schedule(); };
+  controls.querySelector('[data-backdrop-previous]')?.addEventListener('click', () => select(index - 1), { signal });
+  controls.querySelector('[data-backdrop-next]')?.addEventListener('click', () => select(index + 1), { signal });
+  toggle?.addEventListener('click', () => { intentionallyPaused = !intentionallyPaused; schedule(); }, { signal });
+  document.addEventListener('visibilitychange', schedule, { signal });
+  reducedMotion.addEventListener('change', () => { if (imagesReady) drawScene(index); schedule(); }, { signal });
+  mobile.addEventListener('change', resizeCanvas, { signal });
+  const resizeObserver = 'ResizeObserver' in window ? new ResizeObserver(resizeCanvas) : null;
+  if (resizeObserver) resizeObserver.observe(backdrop);
+  else window.addEventListener('resize', resizeCanvas, { passive: true, signal });
+  backdrop.dataset.transitionMs = String(transitionDuration);
+  resizeCanvas();
+  Promise.all(slides.map((slide) => slide.decode().catch(() => undefined))).then(() => {
+    if (signal.aborted) return;
+    imagesReady = slides.every((slide) => slide.complete && slide.naturalWidth > 0);
+    backdrop.classList.toggle('is-canvas-ready', imagesReady);
+    controls.hidden = !imagesReady;
+    if (imagesReady) drawScene(index);
+    schedule();
+  });
+  signal.addEventListener('abort', () => {
+    stop();
+    resizeObserver?.disconnect();
+    if (animationFrame) window.cancelAnimationFrame(animationFrame);
+  }, { once: true });
 };
 
-const initHeroGallery = (signal) => {
-  const gallery = document.querySelector('[data-hero-gallery]');
+const initHeroProducts = (signal) => {
+  const gallery = document.querySelector('[data-hero-products]');
   if (!gallery) return;
-  const slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
-  const dots = [...gallery.querySelectorAll('[data-gallery-go]')];
-  const current = gallery.querySelector('[data-gallery-current]');
-  const status = gallery.querySelector('[data-gallery-status]');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const slides = [...gallery.querySelectorAll('[data-hero-product-slide]')];
+  const name = gallery.querySelector('[data-hero-product-name]');
+  const status = gallery.querySelector('[data-product-status]');
   let index = Math.max(0, slides.findIndex((slide) => slide.classList.contains('is-active')));
-  let timer = null;
   let touchStart = null;
 
-  const showSlide = (nextIndex, announce = false) => {
+  const showProduct = (nextIndex, announce = false) => {
     const normalized = (nextIndex + slides.length) % slides.length;
     if (normalized === index) return;
     slides[index].classList.remove('is-active');
     slides[index].setAttribute('aria-hidden', 'true');
-    dots[index]?.removeAttribute('aria-current');
     index = normalized;
     slides[index].classList.add('is-active');
     slides[index].setAttribute('aria-hidden', 'false');
-    dots[index]?.setAttribute('aria-current', 'true');
-    if (current) current.textContent = String(index + 1).padStart(2, '0');
-    if (announce && status) status.textContent = `Kitchen image ${index + 1} of ${slides.length}`;
+    const label = slides[index].dataset.productLabel || `Product ${index + 1}`;
+    if (name) name.textContent = label;
+    if (announce && status) status.textContent = `${label}, product ${index + 1} of ${slides.length}`;
   };
 
-  const stop = () => {
-    if (timer) window.clearInterval(timer);
-    timer = null;
-    gallery.classList.add('is-paused');
-  };
-
-  const start = () => {
-    stop();
-    if (reducedMotion.matches || document.hidden || slides.length < 2 || gallery.matches(':hover') || gallery.matches(':focus-within')) return;
-    gallery.classList.remove('is-paused');
-    timer = window.setInterval(() => showSlide(index + 1), 5400);
-  };
-
-  const select = (nextIndex) => { showSlide(nextIndex, true); start(); };
-  gallery.querySelector('[data-gallery-previous]')?.addEventListener('click', () => select(index - 1), { signal });
-  gallery.querySelector('[data-gallery-next]')?.addEventListener('click', () => select(index + 1), { signal });
-  dots.forEach((dot) => dot.addEventListener('click', () => select(Number(dot.dataset.galleryGo)), { signal }));
-  gallery.addEventListener('mouseenter', stop, { signal });
-  gallery.addEventListener('mouseleave', start, { signal });
-  gallery.addEventListener('focusin', stop, { signal });
-  gallery.addEventListener('focusout', () => window.setTimeout(() => { if (!gallery.matches(':focus-within')) start(); }, 0), { signal });
+  gallery.querySelector('[data-product-previous]')?.addEventListener('click', () => showProduct(index - 1, true), { signal });
+  gallery.querySelector('[data-product-next]')?.addEventListener('click', () => showProduct(index + 1, true), { signal });
   gallery.addEventListener('pointerdown', (event) => { if (event.pointerType === 'touch') touchStart = event.clientX; }, { signal });
   gallery.addEventListener('pointerup', (event) => {
     if (touchStart === null) return;
     const distance = event.clientX - touchStart;
     touchStart = null;
-    if (Math.abs(distance) > 36) select(index + (distance < 0 ? 1 : -1));
+    if (Math.abs(distance) > 36) showProduct(index + (distance < 0 ? 1 : -1), true);
   }, { signal });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); }, { signal });
-  reducedMotion.addEventListener('change', start, { signal });
-  signal.addEventListener('abort', stop, { once: true });
-  start();
+  gallery.addEventListener('pointercancel', () => { touchStart = null; }, { signal });
 };
 
 const initGlobal = () => {
@@ -255,8 +356,8 @@ const initGlobal = () => {
   const search = document.querySelector('[data-search-input]');
   search?.addEventListener('input', () => { document.querySelector('[data-search-results]').innerHTML = productSearchResults(search.value); }, { signal });
   initPageMotion(signal);
-  initHeroVideo(signal);
-  initHeroGallery(signal);
+  initHeroBackdrop(signal);
+  initHeroProducts(signal);
   updateCartBadge();
 };
 

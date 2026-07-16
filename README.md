@@ -89,7 +89,7 @@ temima-modern-redesign/
 
 ## Assets and data
 
-The supplied static imagery and branding in `public/assets` was copied from `old.zip`; the source ZIP and PDF remain untouched. The final kitchen, logo, process imagery, product renders, and payment marks are reused. The hero also uses one locally hosted Pexels kitchen video plus three original AI-generated kitchen-inspiration images. See `SOURCE_AUDIT.md` for the complete mapping, generation disclosure, source link, license note, and factual-confidence notes.
+The supplied static imagery and branding in `public/assets` was copied from `old.zip`; the source ZIP and PDF remain untouched. The final kitchen, logo, process imagery, product renders, and payment marks are reused. The hero background combines the supplied kitchen still with three original landscape kitchen scenes generated for this prototype, rendered through a lightweight 1600ms cinematic canvas cross-fade. The Pexels video asset from an earlier treatment remains locally documented but is not active in the current hero. See `SOURCE_AUDIT.md` for the complete mapping, generation disclosure, source link, license note, and factual-confidence notes.
 
 The snapshot did not include a WooCommerce product export, prices, SKU table, product-level construction specifications, or a reliable variation matrix. Catalog prices/SKUs/attribute combinations are therefore labeled prototype data throughout the interface and must be replaced by the approved WooCommerce catalog before production.
 

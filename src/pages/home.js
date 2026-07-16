@@ -5,10 +5,12 @@ import { icon } from '../icons.js';
 export const homePage = () => `
   <main id="main-content">
     <section class="home-hero">
-      <div class="home-hero__backdrop" aria-hidden="true">
-        <video class="home-hero__video" autoplay muted loop playsinline preload="metadata" poster="/assets/hero-kitchen.jpg" tabindex="-1">
-          <source src="/assets/modern-kitchen-cabinets.mp4" type="video/mp4" />
-        </video>
+      <div class="home-hero__backdrop" data-hero-backdrop aria-hidden="true">
+        <canvas class="hero-scene-canvas" data-backdrop-canvas></canvas>
+        <img data-backdrop-slide src="/assets/hero-kitchen.jpg" width="1920" height="1080" alt="" fetchpriority="high" hidden />
+        <img data-backdrop-slide src="/assets/hero-scene-ai-01.jpg" width="1680" height="945" alt="" loading="eager" decoding="async" hidden />
+        <img data-backdrop-slide src="/assets/hero-scene-ai-02.jpg" width="1680" height="945" alt="" loading="eager" decoding="async" hidden />
+        <img data-backdrop-slide src="/assets/hero-scene-ai-03.jpg" width="1680" height="945" alt="" loading="eager" decoding="async" hidden />
       </div>
       <div class="container home-hero__grid">
         <div class="home-hero__content">
@@ -18,25 +20,40 @@ export const homePage = () => `
           <div class="hero-actions"><a class="button button--primary button--large" href="/shop/white-shaker-cabinets" data-link>Shop cabinets ${icon('arrow')}</a><a class="button button--ghost-light button--large" href="/free-3d-kitchen-design" data-link>Get a free 3D design</a></div>
           <div class="hero-reassurance"><span>${icon('check')} Texas-based support</span><span>${icon('check')} Free design service</span><span>${icon('check')} No showroom visit needed</span></div>
         </div>
-        <figure class="home-hero__feature" data-hero-gallery role="region" aria-roledescription="carousel" aria-label="Kitchen inspiration gallery">
-          <div class="hero-gallery__slides">
-            <img class="hero-gallery__slide is-active" data-gallery-slide src="/assets/hero-kitchen.jpg" width="1920" height="1080" alt="Bright finished kitchen with white Shaker cabinetry and a central island" aria-hidden="false" fetchpriority="high" />
-            <img class="hero-gallery__slide" data-gallery-slide src="/assets/hero-kitchen-ai-01.jpg" width="1122" height="1402" alt="Bright White Shaker kitchen with warm oak island and black hardware" aria-hidden="true" loading="lazy" decoding="async" />
-            <img class="hero-gallery__slide" data-gallery-slide src="/assets/hero-kitchen-ai-02.jpg" width="1122" height="1402" alt="White Shaker kitchen with navy island, quartz counters and brass details" aria-hidden="true" loading="lazy" decoding="async" />
-            <img class="hero-gallery__slide" data-gallery-slide src="/assets/hero-kitchen-ai-03.jpg" width="1122" height="1402" alt="Compact White Shaker galley kitchen with pantry storage and open shelving" aria-hidden="true" loading="lazy" decoding="async" />
+        <figure class="home-hero__feature hero-product" data-hero-products role="region" aria-roledescription="carousel" aria-label="Featured White Shaker products">
+          <div class="hero-product__media">
+            <span class="hero-product__media-label">Product view</span>
+            <img class="hero-product__slide is-active" data-hero-product-slide data-product-label="Shaker door sample" src="/assets/white-shaker-door.webp" width="1080" height="1080" alt="White Shaker cabinet door sample" aria-hidden="false" />
+            <img class="hero-product__slide" data-hero-product-slide data-product-label="Drawer and door base" src="/assets/drawer-door-base.webp" width="1080" height="1080" alt="White Shaker drawer and door base cabinet" aria-hidden="true" loading="lazy" decoding="async" />
+            <img class="hero-product__slide" data-hero-product-slide data-product-label="Wall cabinet" src="/assets/wall-cabinet.webp" width="1080" height="1080" alt="White Shaker wall cabinet" aria-hidden="true" loading="lazy" decoding="async" />
+            <img class="hero-product__slide" data-hero-product-slide data-product-label="Tall pantry cabinet" src="/assets/tall-pantry.webp" width="1080" height="1080" alt="White Shaker tall pantry cabinet" aria-hidden="true" loading="lazy" decoding="async" />
           </div>
-          <button class="hero-gallery__nav hero-gallery__nav--previous" type="button" data-gallery-previous aria-label="Previous kitchen image">${icon('arrow')}</button>
-          <button class="hero-gallery__nav hero-gallery__nav--next" type="button" data-gallery-next aria-label="Next kitchen image">${icon('arrow')}</button>
-          <div class="hero-gallery__footer">
-            <span class="hero-gallery__count" aria-hidden="true"><b data-gallery-current>01</b><i>/</i><span>04</span></span>
-            <div class="hero-gallery__dots" role="group" aria-label="Choose a kitchen image">
-              ${[0, 1, 2, 3].map((index) => `<button type="button" data-gallery-go="${index}" aria-label="Show kitchen image ${index + 1}" ${index === 0 ? 'aria-current="true"' : ''}></button>`).join('')}
+          <figcaption class="hero-product__content">
+            <span class="eyebrow">Featured collection</span>
+            <h2>White Shaker cabinetry</h2>
+            <p>Base, wall and pantry cabinets for a clean, coordinated room.</p>
+            <div class="hero-product__footer">
+              <a class="text-link" href="/shop/white-shaker-cabinets" data-link>Explore the collection ${icon('arrow')}</a>
+              <div class="hero-product__navigation">
+                <button type="button" data-product-previous aria-label="Previous featured product">${icon('arrow')}</button>
+                <span data-hero-product-name>Shaker door sample</span>
+                <button type="button" data-product-next aria-label="Next featured product">${icon('arrow')}</button>
+              </div>
             </div>
-          </div>
-          <span class="sr-only" data-gallery-status aria-live="polite"></span>
+          </figcaption>
+          <span class="sr-only" data-product-status aria-live="polite"></span>
         </figure>
       </div>
-      <button class="hero-video-toggle" type="button" data-video-toggle aria-label="Pause background video">${icon('pause')}<span>Pause film</span></button>
+      <div class="hero-scene-controls" data-hero-backdrop-controls role="group" aria-label="Kitchen background slideshow" hidden>
+        <button type="button" data-backdrop-previous aria-label="Previous kitchen scene">${icon('arrow')}</button>
+        <button type="button" data-backdrop-toggle aria-label="Pause kitchen slideshow">${icon('pause')}</button>
+        <button type="button" data-backdrop-next aria-label="Next kitchen scene">${icon('arrow')}</button>
+        <span class="hero-scene-controls__count" aria-hidden="true"><b data-backdrop-current>01</b><i>/</i><span>04</span></span>
+        <div class="hero-scene-controls__dots" aria-hidden="true">
+          ${[0, 1, 2, 3].map((index) => `<i data-backdrop-dot ${index === 0 ? 'class="is-active"' : ''}></i>`).join('')}
+        </div>
+      </div>
+      <span class="sr-only" data-backdrop-status aria-live="polite"></span>
       <div class="hero-index" aria-hidden="true"><span>01</span><i></i><span>PLAN</span></div>
     </section>
     ${trustStrip()}
