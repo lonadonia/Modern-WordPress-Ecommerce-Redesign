@@ -1,6 +1,6 @@
 {
   "baseURL": "http://127.0.0.1:4173",
-  "generatedAt": "2026-07-16T00:17:35.708Z",
+  "generatedAt": "2026-07-16T01:15:36.858Z",
   "checks": [
     {
       "label": "home-desktop",
@@ -78,8 +78,16 @@
       "toggleLabel": "Pause background video"
     },
     {
+      "label": "hero-gallery",
+      "sources": 4,
+      "activeSource": "/assets/hero-kitchen-ai-01.jpg",
+      "current": "02",
+      "currentDots": 1,
+      "transition": "1.05s, 6s"
+    },
+    {
       "label": "section-reveal",
-      "revealOpacity": 0.921108
+      "revealOpacity": 0.940787
     },
     {
       "label": "desktop-filter",

@@ -145,6 +145,66 @@ const initHeroVideo = (signal) => {
   syncPlayback();
 };
 
+const initHeroGallery = (signal) => {
+  const gallery = document.querySelector('[data-hero-gallery]');
+  if (!gallery) return;
+  const slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
+  const dots = [...gallery.querySelectorAll('[data-gallery-go]')];
+  const current = gallery.querySelector('[data-gallery-current]');
+  const status = gallery.querySelector('[data-gallery-status]');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let index = Math.max(0, slides.findIndex((slide) => slide.classList.contains('is-active')));
+  let timer = null;
+  let touchStart = null;
+
+  const showSlide = (nextIndex, announce = false) => {
+    const normalized = (nextIndex + slides.length) % slides.length;
+    if (normalized === index) return;
+    slides[index].classList.remove('is-active');
+    slides[index].setAttribute('aria-hidden', 'true');
+    dots[index]?.removeAttribute('aria-current');
+    index = normalized;
+    slides[index].classList.add('is-active');
+    slides[index].setAttribute('aria-hidden', 'false');
+    dots[index]?.setAttribute('aria-current', 'true');
+    if (current) current.textContent = String(index + 1).padStart(2, '0');
+    if (announce && status) status.textContent = `Kitchen image ${index + 1} of ${slides.length}`;
+  };
+
+  const stop = () => {
+    if (timer) window.clearInterval(timer);
+    timer = null;
+    gallery.classList.add('is-paused');
+  };
+
+  const start = () => {
+    stop();
+    if (reducedMotion.matches || document.hidden || slides.length < 2 || gallery.matches(':hover') || gallery.matches(':focus-within')) return;
+    gallery.classList.remove('is-paused');
+    timer = window.setInterval(() => showSlide(index + 1), 5400);
+  };
+
+  const select = (nextIndex) => { showSlide(nextIndex, true); start(); };
+  gallery.querySelector('[data-gallery-previous]')?.addEventListener('click', () => select(index - 1), { signal });
+  gallery.querySelector('[data-gallery-next]')?.addEventListener('click', () => select(index + 1), { signal });
+  dots.forEach((dot) => dot.addEventListener('click', () => select(Number(dot.dataset.galleryGo)), { signal }));
+  gallery.addEventListener('mouseenter', stop, { signal });
+  gallery.addEventListener('mouseleave', start, { signal });
+  gallery.addEventListener('focusin', stop, { signal });
+  gallery.addEventListener('focusout', () => window.setTimeout(() => { if (!gallery.matches(':focus-within')) start(); }, 0), { signal });
+  gallery.addEventListener('pointerdown', (event) => { if (event.pointerType === 'touch') touchStart = event.clientX; }, { signal });
+  gallery.addEventListener('pointerup', (event) => {
+    if (touchStart === null) return;
+    const distance = event.clientX - touchStart;
+    touchStart = null;
+    if (Math.abs(distance) > 36) select(index + (distance < 0 ? 1 : -1));
+  }, { signal });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); }, { signal });
+  reducedMotion.addEventListener('change', start, { signal });
+  signal.addEventListener('abort', stop, { once: true });
+  start();
+};
+
 const initGlobal = () => {
   const signal = window.pageAbort.signal;
   const header = document.querySelector('[data-site-header]');
@@ -196,6 +256,7 @@ const initGlobal = () => {
   search?.addEventListener('input', () => { document.querySelector('[data-search-results]').innerHTML = productSearchResults(search.value); }, { signal });
   initPageMotion(signal);
   initHeroVideo(signal);
+  initHeroGallery(signal);
   updateCartBadge();
 };
 

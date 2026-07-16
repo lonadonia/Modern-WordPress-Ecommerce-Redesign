@@ -99,6 +99,20 @@ if (heroMotion.width < 1280 || heroMotion.height < 720 || !heroMotion.duration |
 await motionPage.locator('[data-video-toggle]').click();
 if (!(await motionPage.locator('.home-hero__video').evaluate((video) => video.paused))) issues.push({ type: 'hero-video-control', viewport: 1440, url: motionPage.url(), message: 'The background video did not pause.' });
 await motionPage.locator('[data-video-toggle]').click();
+const gallerySources = await motionPage.locator('[data-gallery-slide]').evaluateAll((slides) => slides.map((slide) => slide.getAttribute('src')));
+await motionPage.locator('[data-gallery-next]').click();
+await motionPage.waitForFunction(() => {
+  const active = document.querySelector('[data-gallery-slide].is-active');
+  return active?.getAttribute('src')?.includes('hero-kitchen-ai-01') && active.complete && active.naturalWidth > 0;
+});
+const galleryState = await motionPage.evaluate(() => ({
+  activeSource: document.querySelector('[data-gallery-slide].is-active')?.getAttribute('src'),
+  current: document.querySelector('[data-gallery-current]')?.textContent,
+  currentDots: document.querySelectorAll('[data-gallery-go][aria-current="true"]').length,
+  transition: getComputedStyle(document.querySelector('[data-gallery-slide].is-active')).transitionDuration
+}));
+checks.push({ label: 'hero-gallery', sources: gallerySources.length, ...galleryState });
+if (gallerySources.length !== 4 || !gallerySources.slice(1).every((source) => source.includes('hero-kitchen-ai-')) || galleryState.current !== '02' || galleryState.currentDots !== 1 || !galleryState.transition.includes('1.05s')) issues.push({ type: 'hero-gallery', viewport: 1440, url: motionPage.url(), message: JSON.stringify({ gallerySources, galleryState }) });
 await motionPage.locator('.category-card').first().scrollIntoViewIfNeeded();
 await motionPage.waitForFunction(() => Number.parseFloat(getComputedStyle(document.querySelector('.category-card')).opacity) >= .9);
 const revealOpacity = await motionPage.locator('.category-card').first().evaluate((card) => Number.parseFloat(getComputedStyle(card).opacity));

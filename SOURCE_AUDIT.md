@@ -49,6 +49,16 @@
 |---|---|---|---|
 | `modern-kitchen-cabinets.mp4` | [Modern Kitchen Interior, Pexels video 10216191](https://www.pexels.com/video/modern-kitchen-interior-10216191/) | Ammad Rasool | 1280×720 background video downloaded from Pexels and verified in-browser. The [Pexels license](https://www.pexels.com/license/) permits free website and e-commerce use, modification, and use without required attribution. The prototype uses it as an integrated hero background and does not redistribute or sell the unaltered clip. |
 
+## Generated hero gallery assets
+
+| Prototype asset | Generation method | Visual role |
+|---|---|---|
+| `hero-kitchen-ai-01.jpg` | OpenAI built-in image generation, original photorealistic scene | Bright White Shaker kitchen with warm-oak island and black hardware |
+| `hero-kitchen-ai-02.jpg` | OpenAI built-in image generation, original photorealistic scene | White Shaker kitchen with navy island, quartz and restrained brass accents |
+| `hero-kitchen-ai-03.jpg` | OpenAI built-in image generation, original photorealistic scene | Compact galley kitchen emphasizing pantry storage and open shelving |
+
+The generated scenes use no supplied customer identity, logos, visible text, or third-party stock image input. They are presentation imagery, not verified Temima installations or exact product/specification evidence, and must not be captioned as completed customer work.
+
 The product WebP files declare 1080×1080 dimensions but are extremely small, low-detail pale renders. They are usable on a warm neutral stage, not as zoom-level technical evidence. No dimension diagram, interior photography, spec sheet, or alternate-angle set was supplied. The prototype creates a clearly labeled illustrative dimension diagram in HTML/SVG rather than pretending a manufacturer sheet exists.
 
 Only one finished-kitchen photograph was supplied. The home project grid therefore uses disclosed crops of the same “source kitchen” rather than presenting invented customer projects.
@@ -122,4 +132,4 @@ The prototype uses the brief’s clearer `/shop/white-shaker-cabinets` route. Pr
 
 ## Asset recommendation
 
-The Pexels hero video is licensed for the current website treatment under the terms linked above. The supplied still hero kitchen and three process images should still receive client rights confirmation. Product renders need a consistent higher-quality export for production, especially for zoom and comparison. The client should supply at least 8–12 approved completed kitchens plus dimension diagrams and interiors for primary product families.
+The Pexels hero video is licensed for the current website treatment under the terms linked above. The supplied still hero kitchen and three process images should still receive client rights confirmation. The generated gallery images are inspiration-only and should eventually be complemented or replaced by approved Temima installations. Product renders need a consistent higher-quality export for production, especially for zoom and comparison. The client should supply at least 8–12 approved completed kitchens plus dimension diagrams and interiors for primary product families.

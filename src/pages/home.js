@@ -18,8 +18,22 @@ export const homePage = () => `
           <div class="hero-actions"><a class="button button--primary button--large" href="/shop/white-shaker-cabinets" data-link>Shop cabinets ${icon('arrow')}</a><a class="button button--ghost-light button--large" href="/free-3d-kitchen-design" data-link>Get a free 3D design</a></div>
           <div class="hero-reassurance"><span>${icon('check')} Texas-based support</span><span>${icon('check')} Free design service</span><span>${icon('check')} No showroom visit needed</span></div>
         </div>
-        <figure class="home-hero__feature">
-          <img src="/assets/hero-kitchen.jpg" width="1920" height="1080" alt="Bright finished kitchen with white Shaker cabinetry and a central island" />
+        <figure class="home-hero__feature" data-hero-gallery role="region" aria-roledescription="carousel" aria-label="Kitchen inspiration gallery">
+          <div class="hero-gallery__slides">
+            <img class="hero-gallery__slide is-active" data-gallery-slide src="/assets/hero-kitchen.jpg" width="1920" height="1080" alt="Bright finished kitchen with white Shaker cabinetry and a central island" aria-hidden="false" fetchpriority="high" />
+            <img class="hero-gallery__slide" data-gallery-slide src="/assets/hero-kitchen-ai-01.jpg" width="1122" height="1402" alt="Bright White Shaker kitchen with warm oak island and black hardware" aria-hidden="true" loading="lazy" decoding="async" />
+            <img class="hero-gallery__slide" data-gallery-slide src="/assets/hero-kitchen-ai-02.jpg" width="1122" height="1402" alt="White Shaker kitchen with navy island, quartz counters and brass details" aria-hidden="true" loading="lazy" decoding="async" />
+            <img class="hero-gallery__slide" data-gallery-slide src="/assets/hero-kitchen-ai-03.jpg" width="1122" height="1402" alt="Compact White Shaker galley kitchen with pantry storage and open shelving" aria-hidden="true" loading="lazy" decoding="async" />
+          </div>
+          <button class="hero-gallery__nav hero-gallery__nav--previous" type="button" data-gallery-previous aria-label="Previous kitchen image">${icon('arrow')}</button>
+          <button class="hero-gallery__nav hero-gallery__nav--next" type="button" data-gallery-next aria-label="Next kitchen image">${icon('arrow')}</button>
+          <div class="hero-gallery__footer">
+            <span class="hero-gallery__count" aria-hidden="true"><b data-gallery-current>01</b><i>/</i><span>04</span></span>
+            <div class="hero-gallery__dots" role="group" aria-label="Choose a kitchen image">
+              ${[0, 1, 2, 3].map((index) => `<button type="button" data-gallery-go="${index}" aria-label="Show kitchen image ${index + 1}" ${index === 0 ? 'aria-current="true"' : ''}></button>`).join('')}
+            </div>
+          </div>
+          <span class="sr-only" data-gallery-status aria-live="polite"></span>
         </figure>
       </div>
       <button class="hero-video-toggle" type="button" data-video-toggle aria-label="Pause background video">${icon('pause')}<span>Pause film</span></button>

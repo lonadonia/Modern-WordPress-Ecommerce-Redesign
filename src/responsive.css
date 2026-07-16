@@ -48,4 +48,6 @@
   .container{width:calc(100% - 24px)}.site-header__inner>.brand{margin-right:0}.header-actions{gap:0}.header-actions .icon-button{width:40px}.home-hero h1,.quote-hero h1{font-size:2.45rem}.category-card,.category-card--wide{grid-template-columns:110px 1fr}.product-card__buy{align-items:stretch;flex-direction:column}.product-card__buy .button{width:100%}.gallery-stage{height:350px}.mobile-purchase-bar{padding-inline:10px}.mobile-purchase-bar .button{min-width:130px}.choice-grid--four{grid-template-columns:1fr 1fr}.quote-step .choice-grid--three{grid-template-columns:1fr}.layout-choice-grid{grid-template-columns:1fr 1fr}.cart-item{grid-template-columns:85px 1fr}.cart-item__image{width:85px;height:85px}.checkout-header__inner{gap:8px}.checkout-secure strong{font-size:.59rem}
 }
 
+@media (hover:none){.hero-gallery__nav{opacity:1;transform:translateX(0)}}
+
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.home-hero__video,.hero-video-toggle{display:none!important}.motion-reveal{opacity:1!important;translate:0 0!important}}

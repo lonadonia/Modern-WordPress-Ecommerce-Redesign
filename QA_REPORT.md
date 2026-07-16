@@ -128,6 +128,8 @@ Motion-specific browser checks also verify:
 - The locally hosted hero MP4 loads as 1280×720 media with a valid duration
 - Muted autoplay starts in a no-preference motion context
 - The visible hero control pauses and resumes playback
+- The four-image hero gallery loads all three generated assets, advances to exactly one active slide, and updates its counter and current indicator
+- Previous/next controls retain accessible names while the 1050ms cross-fade remains present in the computed browser styles
 - Scroll-triggered section reveals reach their final visible state
 - Reduced-motion mode replaces the moving background with the static poster and removes reveal motion
 
