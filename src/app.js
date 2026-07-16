@@ -78,6 +78,73 @@ const closeDrawer = () => {
   drawer.classList.remove('is-open'); drawer.setAttribute('aria-hidden', 'true'); backdrop.hidden = true; document.body.classList.remove('has-overlay');
 };
 
+const initPageMotion = (signal) => {
+  const selectors = [
+    '.section-intro', '.category-card', '.design-story__media', '.design-story__content', '.why-grid article',
+    '.product-card', '.journey-grid article', '.project-card', '.review-card', '.measurement-grid > *',
+    '.final-cta__inner', '.policy-band article', '.faq-layout > *', '.design-help', '.catalog-hero__grid > *',
+    '.subcategory-scroll > *', '.catalog-notice', '.catalog-toolbar', '.catalog-results', '.buying-guide__grid > *',
+    '.product-main__grid > *', '.product-details-grid > *', '.quote-hero__grid > *', '.quote-layout > *',
+    '.cart-heading .container > *', '.cart-layout > *', '.checkout-heading .container > *', '.checkout-layout > *',
+    '.confirmation-grid > *', '.confirmation-layout > *'
+  ];
+  const elements = [...new Set(document.querySelectorAll(selectors.join(',')))];
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  elements.forEach((element) => {
+    const siblingIndex = [...element.parentElement.children].indexOf(element);
+    element.classList.add('motion-reveal');
+    element.style.setProperty('--reveal-delay', `${Math.min(siblingIndex % 4, 3) * 70}ms`);
+  });
+
+  if (reducedMotion || !('IntersectionObserver' in window)) {
+    elements.forEach((element) => element.classList.add('is-revealed'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-revealed');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
+
+  elements.forEach((element) => observer.observe(element));
+  signal.addEventListener('abort', () => observer.disconnect(), { once: true });
+};
+
+const initHeroVideo = (signal) => {
+  const video = document.querySelector('.home-hero__video');
+  const backdrop = document.querySelector('.home-hero__backdrop');
+  const toggle = document.querySelector('[data-video-toggle]');
+  if (!video || !backdrop || !toggle) return;
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let intentionallyPaused = false;
+
+  const updateControl = () => {
+    const paused = intentionallyPaused || reducedMotion.matches;
+    toggle.hidden = reducedMotion.matches;
+    toggle.setAttribute('aria-label', paused ? 'Play background video' : 'Pause background video');
+    toggle.innerHTML = `${icon(paused ? 'play' : 'pause')}<span>${paused ? 'Play film' : 'Pause film'}</span>`;
+  };
+
+  const syncPlayback = () => {
+    if (reducedMotion.matches || intentionallyPaused || document.hidden) video.pause();
+    else video.play().catch(() => { intentionallyPaused = true; updateControl(); });
+    updateControl();
+  };
+
+  const markReady = () => backdrop.classList.add('is-video-ready');
+  if (video.readyState >= 2) markReady(); else video.addEventListener('canplay', markReady, { once: true, signal });
+  video.addEventListener('error', () => { backdrop.classList.add('is-video-unavailable'); toggle.hidden = true; }, { once: true, signal });
+  toggle.addEventListener('click', () => { intentionallyPaused = !intentionallyPaused; syncPlayback(); }, { signal });
+  reducedMotion.addEventListener('change', syncPlayback, { signal });
+  document.addEventListener('visibilitychange', syncPlayback, { signal });
+  syncPlayback();
+};
+
 const initGlobal = () => {
   const signal = window.pageAbort.signal;
   const header = document.querySelector('[data-site-header]');
@@ -127,6 +194,8 @@ const initGlobal = () => {
   });
   const search = document.querySelector('[data-search-input]');
   search?.addEventListener('input', () => { document.querySelector('[data-search-results]').innerHTML = productSearchResults(search.value); }, { signal });
+  initPageMotion(signal);
+  initHeroVideo(signal);
   updateCartBadge();
 };
 

@@ -1,8 +1,8 @@
 # QA report
 
-QA date: 2026-07-15  
-Environment: local Vite server, headless Chromium via Playwright  
-Primary evidence: `preview/qa-results.json` and `preview/screenshots/`
+- QA date: 2026-07-16
+- Environment: local Vite server, headless Chromium via Playwright
+- Primary evidence: `preview/qa-results.json` and `preview/screenshots/`
 
 ## Routes tested
 
@@ -122,6 +122,14 @@ Automated route checks verify:
 - No horizontal document overflow at the six required widths
 - Visible focus styles in CSS
 - Reduced-motion context used during QA
+
+Motion-specific browser checks also verify:
+
+- The locally hosted hero MP4 loads as 1280×720 media with a valid duration
+- Muted autoplay starts in a no-preference motion context
+- The visible hero control pauses and resumes playback
+- Scroll-triggered section reveals reach their final visible state
+- Reduced-motion mode replaces the moving background with the static poster and removes reveal motion
 
 Manual/code review confirms:
 

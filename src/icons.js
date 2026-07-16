@@ -21,6 +21,8 @@ const paths = {
   camera: '<rect x="3" y="6" width="18" height="14" rx="2"/><path d="m8 6 1.5-2h5L16 6"/><circle cx="12" cy="13" r="4"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   minus: '<path d="M5 12h14"/>',
+  play: '<path d="m9 6 9 6-9 6V6Z"/>',
+  pause: '<path d="M9 6v12M15 6v12"/>',
   trash: '<path d="M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6"/>',
   edit: '<path d="m4 20 4-1 10-10a2.1 2.1 0 1 0-3-3L5 16l-1 4Z"/>',
   lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',

@@ -43,6 +43,12 @@
 | Payment SVGs | Same normalized names | Source payment-mark treatment only |
 | Poppins Regular/Semibold | Same names | Self-hosted interface typography |
 
+## Externally licensed motion asset
+
+| Prototype asset | Source | Creator | License / use note |
+|---|---|---|---|
+| `modern-kitchen-cabinets.mp4` | [Modern Kitchen Interior, Pexels video 10216191](https://www.pexels.com/video/modern-kitchen-interior-10216191/) | Ammad Rasool | 1280×720 background video downloaded from Pexels and verified in-browser. The [Pexels license](https://www.pexels.com/license/) permits free website and e-commerce use, modification, and use without required attribution. The prototype uses it as an integrated hero background and does not redistribute or sell the unaltered clip. |
+
 The product WebP files declare 1080×1080 dimensions but are extremely small, low-detail pale renders. They are usable on a warm neutral stage, not as zoom-level technical evidence. No dimension diagram, interior photography, spec sheet, or alternate-angle set was supplied. The prototype creates a clearly labeled illustrative dimension diagram in HTML/SVG rather than pretending a manufacturer sheet exists.
 
 Only one finished-kitchen photograph was supplied. The home project grid therefore uses disclosed crops of the same “source kitchen” rather than presenting invented customer projects.
@@ -116,4 +122,4 @@ The prototype uses the brief’s clearer `/shop/white-shaker-cabinets` route. Pr
 
 ## Asset recommendation
 
-The hero kitchen is suitable for the prototype and initial launch if the client owns publication rights. The three process images should also receive rights confirmation. Product renders need a consistent higher-quality export for production, especially for zoom and comparison. The client should supply at least 8–12 approved completed kitchens plus dimension diagrams and interiors for primary product families.
+The Pexels hero video is licensed for the current website treatment under the terms linked above. The supplied still hero kitchen and three process images should still receive client rights confirmation. Product renders need a consistent higher-quality export for production, especially for zoom and comparison. The client should supply at least 8–12 approved completed kitchens plus dimension diagrams and interiors for primary product families.

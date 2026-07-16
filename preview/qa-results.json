@@ -1,6 +1,6 @@
 {
   "baseURL": "http://127.0.0.1:4173",
-  "generatedAt": "2026-07-15T23:49:43.502Z",
+  "generatedAt": "2026-07-16T00:17:35.708Z",
   "checks": [
     {
       "label": "home-desktop",
@@ -67,6 +67,19 @@
       "emptyInternalLinks": [],
       "unlabeledFields": [],
       "unnamedButtons": 0
+    },
+    {
+      "label": "hero-motion",
+      "width": 1280,
+      "height": 720,
+      "duration": 8.76,
+      "paused": false,
+      "source": "http://127.0.0.1:4173/assets/modern-kitchen-cabinets.mp4",
+      "toggleLabel": "Pause background video"
+    },
+    {
+      "label": "section-reveal",
+      "revealOpacity": 0.921108
     },
     {
       "label": "desktop-filter",

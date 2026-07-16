@@ -5,6 +5,11 @@ import { icon } from '../icons.js';
 export const homePage = () => `
   <main id="main-content">
     <section class="home-hero">
+      <div class="home-hero__backdrop" aria-hidden="true">
+        <video class="home-hero__video" autoplay muted loop playsinline preload="metadata" poster="/assets/hero-kitchen.jpg" tabindex="-1">
+          <source src="/assets/modern-kitchen-cabinets.mp4" type="video/mp4" />
+        </video>
+      </div>
       <div class="container home-hero__grid">
         <div class="home-hero__content">
           <span class="eyebrow eyebrow--light">Cabinets, planning and practical support</span>
@@ -13,11 +18,12 @@ export const homePage = () => `
           <div class="hero-actions"><a class="button button--primary button--large" href="/shop/white-shaker-cabinets" data-link>Shop cabinets ${icon('arrow')}</a><a class="button button--ghost-light button--large" href="/free-3d-kitchen-design" data-link>Get a free 3D design</a></div>
           <div class="hero-reassurance"><span>${icon('check')} Texas-based support</span><span>${icon('check')} Free design service</span><span>${icon('check')} No showroom visit needed</span></div>
         </div>
-        <figure class="home-hero__media">
-          <img src="/assets/hero-kitchen.jpg" width="1920" height="1080" alt="Bright finished kitchen with white Shaker cabinetry and a central island" fetchpriority="high" />
-          <figcaption><span>Start with the room</span><strong>Then make every cabinet choice add up.</strong><a href="/#inspiration" data-link>Explore the kitchen ${icon('arrow')}</a></figcaption>
-        </figure>
+        <aside class="home-hero__feature" aria-label="Featured cabinet collection">
+          <div class="home-hero__feature-media"><img src="/assets/white-shaker-door.webp" width="1080" height="1080" alt="" /></div>
+          <div class="home-hero__feature-copy"><span>Featured collection</span><h2>White Shaker cabinetry</h2><p>Base, wall and pantry cabinets for a clean, coordinated room.</p><a href="/shop/white-shaker-cabinets" data-link>Explore the collection ${icon('arrow')}</a></div>
+        </aside>
       </div>
+      <button class="hero-video-toggle" type="button" data-video-toggle aria-label="Pause background video">${icon('pause')}<span>Pause film</span></button>
       <div class="hero-index" aria-hidden="true"><span>01</span><i></i><span>PLAN</span></div>
     </section>
     ${trustStrip()}

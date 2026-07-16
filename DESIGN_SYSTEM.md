@@ -103,10 +103,11 @@ Icons use the inline SVG helper in `src/icons.js`:
 
 ## Motion
 
-- Typical duration: 180–250ms
-- Motion explains drawers, dialogs, filter refresh, hover, progress, and toasts
-- No parallax, scroll hijacking, or scroll-trigger animation package
-- `prefers-reduced-motion: reduce` reduces animation and restores instant scrolling
+- Typical interface duration: 180–250ms; editorial reveal duration: 660ms
+- Motion explains drawers, dialogs, filter refresh, hover, progress, toasts, and content hierarchy as sections enter the viewport
+- The hero uses a locally hosted, muted kitchen video with a visible pause/play control and a still-image fallback
+- Lightweight native `IntersectionObserver` reveals replace a third-party animation package; there is no parallax or scroll hijacking
+- `prefers-reduced-motion: reduce` removes reveals, pauses/hides the background video, uses its poster image, and restores instant scrolling
 
 ## Accessibility rules
 

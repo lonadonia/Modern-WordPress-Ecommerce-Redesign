@@ -89,7 +89,7 @@ temima-modern-redesign/
 
 ## Assets and data
 
-All imagery and branding in `public/assets` was copied from the supplied `old.zip`; the source ZIP and PDF remain untouched. The final kitchen, logo, process imagery, product renders, and payment marks are reused. See `SOURCE_AUDIT.md` for the complete mapping and factual-confidence notes.
+The static imagery and branding in `public/assets` was copied from the supplied `old.zip`; the source ZIP and PDF remain untouched. The final kitchen, logo, process imagery, product renders, and payment marks are reused. The hero also uses one locally hosted Pexels kitchen video under the Pexels license. See `SOURCE_AUDIT.md` for the complete mapping, source link, license note, and factual-confidence notes.
 
 The snapshot did not include a WooCommerce product export, prices, SKU table, product-level construction specifications, or a reliable variation matrix. Catalog prices/SKUs/attribute combinations are therefore labeled prototype data throughout the interface and must be replaced by the approved WooCommerce catalog before production.
 

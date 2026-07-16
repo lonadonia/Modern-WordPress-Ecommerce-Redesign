@@ -81,6 +81,31 @@ const desktopPage = await desktop.newPage();
 attachDiagnostics(desktopPage, 1440);
 await screenshotRoutes(desktopPage, 'desktop');
 
+const motionContext = await browser.newContext({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1, reducedMotion: 'no-preference' });
+const motionPage = await motionContext.newPage();
+attachDiagnostics(motionPage, 1440);
+await goto(motionPage, '/');
+await motionPage.waitForFunction(() => {
+  const video = document.querySelector('.home-hero__video');
+  return video && video.readyState >= 2 && video.videoWidth > 0;
+}, null, { timeout: 15000 });
+const heroMotion = await motionPage.evaluate(() => {
+  const video = document.querySelector('.home-hero__video');
+  const toggle = document.querySelector('[data-video-toggle]');
+  return { width: video.videoWidth, height: video.videoHeight, duration: video.duration, paused: video.paused, source: video.currentSrc, toggleLabel: toggle?.getAttribute('aria-label') };
+});
+checks.push({ label: 'hero-motion', ...heroMotion });
+if (heroMotion.width < 1280 || heroMotion.height < 720 || !heroMotion.duration || heroMotion.paused || !heroMotion.source.endsWith('.mp4')) issues.push({ type: 'hero-video', viewport: 1440, url: motionPage.url(), message: JSON.stringify(heroMotion) });
+await motionPage.locator('[data-video-toggle]').click();
+if (!(await motionPage.locator('.home-hero__video').evaluate((video) => video.paused))) issues.push({ type: 'hero-video-control', viewport: 1440, url: motionPage.url(), message: 'The background video did not pause.' });
+await motionPage.locator('[data-video-toggle]').click();
+await motionPage.locator('.category-card').first().scrollIntoViewIfNeeded();
+await motionPage.waitForFunction(() => Number.parseFloat(getComputedStyle(document.querySelector('.category-card')).opacity) >= .9);
+const revealOpacity = await motionPage.locator('.category-card').first().evaluate((card) => Number.parseFloat(getComputedStyle(card).opacity));
+checks.push({ label: 'section-reveal', revealOpacity });
+if (revealOpacity < .9) issues.push({ type: 'section-reveal', viewport: 1440, url: motionPage.url(), message: `Reveal opacity remained ${revealOpacity}.` });
+await motionContext.close();
+
 await goto(desktopPage, '/shop/white-shaker-cabinets');
 await desktopPage.locator('[data-filter-form="desktop"] input[name="type"][value="base"]').check({ force: true });
 await desktopPage.locator('[data-sort]').selectOption('price-desc');
