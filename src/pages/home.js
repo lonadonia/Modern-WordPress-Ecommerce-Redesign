@@ -18,10 +18,9 @@ export const homePage = () => `
           <div class="hero-actions"><a class="button button--primary button--large" href="/shop/white-shaker-cabinets" data-link>Shop cabinets ${icon('arrow')}</a><a class="button button--ghost-light button--large" href="/free-3d-kitchen-design" data-link>Get a free 3D design</a></div>
           <div class="hero-reassurance"><span>${icon('check')} Texas-based support</span><span>${icon('check')} Free design service</span><span>${icon('check')} No showroom visit needed</span></div>
         </div>
-        <aside class="home-hero__feature" aria-label="Featured cabinet collection">
-          <div class="home-hero__feature-media"><img src="/assets/white-shaker-door.webp" width="1080" height="1080" alt="" /></div>
-          <div class="home-hero__feature-copy"><span>Featured collection</span><h2>White Shaker cabinetry</h2><p>Base, wall and pantry cabinets for a clean, coordinated room.</p><a href="/shop/white-shaker-cabinets" data-link>Explore the collection ${icon('arrow')}</a></div>
-        </aside>
+        <figure class="home-hero__feature">
+          <img src="/assets/hero-kitchen.jpg" width="1920" height="1080" alt="Bright finished kitchen with white Shaker cabinetry and a central island" />
+        </figure>
       </div>
       <button class="hero-video-toggle" type="button" data-video-toggle aria-label="Pause background video">${icon('pause')}<span>Pause film</span></button>
       <div class="hero-index" aria-hidden="true"><span>01</span><i></i><span>PLAN</span></div>
